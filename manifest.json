@@ -1,0 +1,174 @@
+{
+  "openrpc": "1.3.2",
+  "info": { "title": "Minecraft", "version": "0.1.0" },
+  "methods": [
+    {
+      "name": "minecraft.summon",
+      "summary": "Spawn entities at a player: tnt, creeper, zombie, chicken...",
+      "params": [
+        { "name": "entity", "required": true, "schema": { "type": "string", "description": "Entity id, e.g. tnt, creeper, zombie" } },
+        { "name": "player", "schema": { "type": "string", "description": "Username or @a / @p / @r. Default: --player" } },
+        { "name": "count", "schema": { "type": "integer", "minimum": 1, "maximum": 32, "default": 1 } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.give",
+      "summary": "Put items in a player's inventory",
+      "params": [
+        { "name": "item", "required": true, "schema": { "type": "string", "description": "Item id, e.g. diamond, tnt, golden_apple" } },
+        { "name": "player", "schema": { "type": "string" } },
+        { "name": "count", "schema": { "type": "integer", "minimum": 1, "maximum": 64, "default": 1 } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.effect",
+      "summary": "Apply a status effect: speed, blindness, levitation, poison...",
+      "params": [
+        { "name": "effect", "required": true, "schema": { "type": "string" } },
+        { "name": "player", "schema": { "type": "string" } },
+        { "name": "seconds", "schema": { "type": "integer", "minimum": 1, "maximum": 3600, "default": 30 } },
+        { "name": "amplifier", "schema": { "type": "integer", "minimum": 0, "maximum": 255, "default": 0 } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.say",
+      "summary": "Print a chat line to every player, e.g. relay a Twitch message",
+      "params": [
+        { "name": "message", "required": true, "schema": { "type": "string", "maxLength": 256 } },
+        { "name": "from", "schema": { "type": "string", "maxLength": 64, "description": "Shown as a colored prefix" } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.title",
+      "summary": "Flash a big title on every player's screen",
+      "params": [
+        { "name": "title", "required": true, "schema": { "type": "string", "maxLength": 64 } },
+        { "name": "subtitle", "schema": { "type": "string", "maxLength": 128 } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.weather",
+      "summary": "Set the weather",
+      "params": [
+        { "name": "weather", "required": true, "schema": { "type": "string", "enum": ["clear", "rain", "thunder"] } },
+        { "name": "seconds", "schema": { "type": "integer", "minimum": 1, "maximum": 86400, "default": 600 } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.time",
+      "summary": "Set the time of day",
+      "params": [
+        { "name": "time", "required": true, "schema": { "oneOf": [{ "type": "string", "enum": ["day", "noon", "night", "midnight"] }, { "type": "integer", "minimum": 0, "maximum": 24000 }] } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.teleport",
+      "summary": "Teleport a player to another player (to) or to coordinates (x, y, z)",
+      "params": [
+        { "name": "player", "schema": { "type": "string" } },
+        { "name": "to", "schema": { "type": "string", "description": "Username" } },
+        { "name": "x", "schema": { "type": "integer", "default": 0 } },
+        { "name": "y", "schema": { "type": "integer", "minimum": -64, "maximum": 320, "default": 64 } },
+        { "name": "z", "schema": { "type": "integer", "default": 0 } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.gamemode",
+      "summary": "Change a player's game mode",
+      "params": [
+        { "name": "mode", "required": true, "schema": { "type": "string", "enum": ["survival", "creative", "adventure", "spectator"] } },
+        { "name": "player", "schema": { "type": "string" } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.kill",
+      "summary": "Kill a player",
+      "params": [{ "name": "player", "schema": { "type": "string" } }],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.clear",
+      "summary": "Empty a player's inventory",
+      "params": [{ "name": "player", "schema": { "type": "string" } }],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.xp",
+      "summary": "Add (or remove, negative) experience",
+      "params": [
+        { "name": "amount", "required": true, "schema": { "type": "integer", "minimum": -10000, "maximum": 10000 } },
+        { "name": "levels", "schema": { "type": "boolean", "default": false, "description": "Levels instead of points" } },
+        { "name": "player", "schema": { "type": "string" } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.sound",
+      "summary": "Play a sound at a player: entity.ender_dragon.growl, entity.creeper.primed, block.anvil.land...",
+      "params": [
+        { "name": "sound", "required": true, "schema": { "type": "string" } },
+        { "name": "player", "schema": { "type": "string" } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "minecraft.command",
+      "summary": "Run any console command (op level). Returns the server's reply",
+      "params": [
+        { "name": "command", "required": true, "schema": { "type": "string", "maxLength": 1400 } }
+      ],
+      "result": { "name": "result", "schema": { "type": "object" } },
+      "paramStructure": "by-name"
+    }
+  
+  ],
+  "x-events": [
+    {
+      "name": "minecraft.chat",
+      "summary": "A player wrote in the in-game chat",
+      "payload": { "type": "object", "properties": { "player": { "type": "string" }, "message": { "type": "string" } }, "required": ["player", "message"] }
+    },
+    {
+      "name": "minecraft.join",
+      "summary": "A player joined the server",
+      "payload": { "type": "object", "properties": { "player": { "type": "string" } }, "required": ["player"] }
+    },
+    {
+      "name": "minecraft.leave",
+      "summary": "A player left the server",
+      "payload": { "type": "object", "properties": { "player": { "type": "string" } }, "required": ["player"] }
+    },
+    {
+      "name": "minecraft.advancement",
+      "summary": "A player earned an advancement, challenge or goal",
+      "payload": { "type": "object", "properties": { "player": { "type": "string" }, "title": { "type": "string", "description": "e.g. Stone Age" } }, "required": ["player", "title"] }
+    },
+    {
+      "name": "minecraft.death",
+      "summary": "A player died; message is the full death line",
+      "payload": { "type": "object", "properties": { "player": { "type": "string" }, "message": { "type": "string" } }, "required": ["player", "message"] }
+    }
+  ]
+}

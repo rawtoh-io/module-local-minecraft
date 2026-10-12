@@ -1,0 +1,4 @@
+# The SDK is a private git dependency: let the system git (and its ssh keys)
+# do the fetching instead of cargo's built-in client.
+[net]
+git-fetch-with-cli = true

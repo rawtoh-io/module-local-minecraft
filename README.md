@@ -19,7 +19,27 @@ module-local-minecraft --state-dir ~/.config/rawtoh-minecraft --rcon-password '.
 | `minecraft.effect`  | `effect` (speed, blindness...), `player?`, `seconds?`, `amplifier?` |
 | `minecraft.say`     | `message`, `from?` (colored prefix, e.g. the Twitch name) |
 | `minecraft.title`   | `title`, `subtitle?`: big text on every screen            |
+| `minecraft.weather` | `weather` clear / rain / thunder, `seconds?`              |
+| `minecraft.time`    | `time` day / noon / night / midnight, or 0-24000          |
+| `minecraft.teleport`| `player?`, `to` (username) or `x`, `y`, `z`               |
+| `minecraft.gamemode`| `mode` survival / creative / adventure / spectator, `player?` |
+| `minecraft.kill`    | `player?`                                                 |
+| `minecraft.clear`   | `player?`: empty the inventory                            |
+| `minecraft.xp`      | `amount` (negative removes), `levels?`, `player?`         |
+| `minecraft.sound`   | `sound` (entity.ender_dragon.growl...), `player?`         |
 | `minecraft.command` | `command`: raw console command, returns the server reply  |
+
+| Event                   | Payload                                      |
+| ----------------------- | -------------------------------------------- |
+| `minecraft.chat`        | `player`, `message`                          |
+| `minecraft.join`        | `player`                                     |
+| `minecraft.leave`       | `player`                                     |
+| `minecraft.advancement` | `player`, `title` (e.g. Stone Age)           |
+| `minecraft.death`       | `player`, `message` (the full death line)    |
+
+Events come from tailing the server's `logs/latest.log` (`--log`), which the
+server writes in English whatever the client locale. RCON itself is one-way.
+Lightning is `minecraft.summon` with `entity: lightning_bolt`.
 
 `player` is a username or `@a` / `@p` / `@r`; it defaults to `--player`. Ids
 are plain (`tnt`) or namespaced (`minecraft:tnt`, `mod:thing`), nothing else
@@ -34,6 +54,7 @@ gets through, so chat input cannot smuggle NBT or a second command.
 | `--rcon`          | `RCON_ADDR`           | `127.0.0.1:25575`       |
 | `--rcon-password` | `RCON_PASSWORD`       | required                |
 | `--player`        | `MC_PLAYER`           | `@a`                    |
+| `--log`           | `MC_LOG`              | none: no events         |
 
 Single-player "Open to LAN" has no RCON: run a dedicated server (the vanilla
 `server.jar` on the same machine is enough). Bedrock is not supported.
