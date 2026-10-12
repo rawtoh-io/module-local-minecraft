@@ -59,7 +59,10 @@ impl Parser {
         if !head.ends_with("/INFO") {
             return None;
         }
-        let msg = msg.strip_prefix("[Not Secure] ").unwrap_or(msg);
+        // 26.x prefixes broadcast lines with "System chat: "; unsigned chat with "[Not Secure] ".
+        let msg = ["System chat: ", "Chat: ", "[Not Secure] "]
+            .iter()
+            .fold(msg, |m, prefix| m.strip_prefix(prefix).unwrap_or(m));
 
         if let Some(rest) = msg.strip_prefix('<') {
             let (player, message) = rest.split_once("> ")?;
@@ -161,7 +164,7 @@ mod tests {
                 json!({ "player": "Tilican", "title": "Stone Age" }),
             ),
             (
-                "Tilican was blown up by Creeper",
+                "System chat: Tilican was blown up by Creeper",
                 "minecraft.death",
                 json!({ "player": "Tilican", "message": "Tilican was blown up by Creeper" }),
             ),
@@ -184,6 +187,7 @@ mod tests {
             "Tilican issued server command: /kill",
             "Tilican fell from a high place", // left the game: unknown player
             "Starting minecraft server version 26.3",
+            "System chat: [Rcon: Granted the advancement [Stone Age] to Tilican]",
             "[Server] hello",
         ] {
             assert_eq!(p.parse(&line(msg)), None, "{msg}");
